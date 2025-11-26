@@ -1,97 +1,119 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Admin Dashboard</title>
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
   <style>
-    :root{
-      --bg:#000;
-      --card:#111;
-      --accent:#ff6b6b;
-      --text:#fff;
-    }
-    body{margin:0;background:var(--bg);color:var(--text);font-family:Arial, sans-serif;}
-    .sidebar{
-      width:240px;height:100vh;background:#141414;position:fixed;left:0;top:0;padding:20px;display:flex;flex-direction:column;gap:20px;
-      border-right:2px solid #222;
-    }
-    .sidebar h2{text-align:center;margin:0;font-size:20px;}
-    .sidebar button{
-      padding:12px;border:none;border-radius:8px;background:var(--accent);color:white;cursor:pointer;font-weight:bold;
-    }
-    .content{
-      margin-left:260px;padding:20px;
-    }
-    .card{
-      background:var(--card);padding:20px;border-radius:12px;margin-bottom:20px;
-      box-shadow:0 4px 20px rgba(255,255,255,0.1);
-    }
-    .stats{display:flex;gap:20px;flex-wrap:wrap;}
-    .stat{
-      flex:1;min-width:200px;background:#1c1c1c;padding:20px;border-radius:12px;text-align:center;
-    }
-    table{
-      width:100%;border-collapse:collapse;margin-top:10px;
-    }
-    td,th{
-      border:1px solid #333;padding:8px;text-align:left;
-    }
+    body {margin:0;background:#0e0e0e;color:white;font-family:Arial;}
+    .sidebar {width:260px;height:100vh;background:#1a1a1a;position:fixed;left:0;top:0;padding:20px;box-shadow:2px 0 8px #0008;}
+    .sidebar h2 {margin-top:0;font-size:24px;display:flex;align-items:center;gap:10px;}
+    .btn {display:block;width:100%;padding:15px;margin:10px 0;background:#ff5f5f;border:none;border-radius:10px;color:white;font-size:16px;cursor:pointer;transition:0.2s;}
+    .btn:hover {background:#ff7b7b;}
+    .main {margin-left:260px;padding:30px;}
+    .card {background:#1d1d1d;padding:20px;border-radius:12px;margin-bottom:20px;box-shadow:0 0 10px #0006;}
+    input, select {padding:10px;border-radius:8px;border:none;margin:5px 0;width:250px;}
+    .list {background:#111;padding:15px;border-radius:10px;margin-top:10px;}
   </style>
 </head>
 <body>
 
-  <div class="sidebar">
-    <h2>🔐 Admin</h2>
-    <button onclick="showPage('dashboard')">📊 Dashboard</button>
-    <button onclick="showPage('users')">👥 Utilisateurs</button>
-    <button onclick="showPage('settings')">⚙️ Paramètres</button>
+<div class="sidebar">
+  <h2>🔐 Admin</h2>
+  <button class="btn" onclick="showPage('dashboard')">📊 Dashboard</button>
+  <button class="btn" onclick="showPage('users')">👥 Utilisateurs</button>
+  <button class="btn" onclick="showPage('codes')">🔑 Codes Admin</button>
+  <button class="btn" onclick="showPage('settings')">⚙️ Paramètres</button>
+</div>
+
+<div class="main">
+  <div id="dashboard" class="page">
+    <h1>Dashboard</h1>
+    <div class="card">Nombre d'utilisateurs : <span id="countUsers">0</span></div>
+    <div class="card">Codes admin actifs : <span id="countCodes">0</span></div>
   </div>
 
-  <div class="content">
-
-    <div id="dashboard" class="page">
-      <h1>Dashboard</h1>
-      <div class="stats">
-        <div class="stat"><h2>124</h2><p>Visiteurs aujourd'hui</p></div>
-        <div class="stat"><h2>57</h2><p>Messages reçus</p></div>
-        <div class="stat"><h2>6</h2><p>Admins actifs</p></div>
-      </div>
+  <div id="users" class="page" style="display:none;">
+    <h1>Gestion des utilisateurs</h1>
+    <div class="card">
+      <h3>Ajouter un utilisateur</h3>
+      <input id="userName" placeholder="Nom d'utilisateur"><br>
+      <input id="userPass" placeholder="Mot de passe"><br>
+      <button class="btn" onclick="addUser()">Ajouter</button>
     </div>
-
-    <div id="users" class="page" style="display:none;">
-      <h1>Gestion des utilisateurs</h1>
-      <div class="card">
-        <h3>Liste des utilisateurs</h3>
-        <table>
-          <tr><th>ID</th><th>Nom</th><th>Status</th></tr>
-          <tr><td>1</td><td>Mathis</td><td>Admin</td></tr>
-          <tr><td>2</td><td>Alex</td><td>Membre</td></tr>
-          <tr><td>3</td><td>Nora</td><td>Membre</td></tr>
-        </table>
-      </div>
+    <div class="card">
+      <h3>Liste des utilisateurs</h3>
+      <div id="userList" class="list"></div>
     </div>
-
-    <div id="settings" class="page" style="display:none;">
-      <h1>Paramètres</h1>
-      <div class="card">
-        <p>Modifier les options du site :</p>
-        <button style="padding:10px 20px;border:none;border-radius:8px;background:var(--accent);color:white;">Mettre à jour</button>
-      </div>
-    </div>
-
   </div>
+
+  <div id="codes" class="page" style="display:none;">
+    <h1>Codes Administrateur</h1>
+    <div class="card">
+      <h3>Créer un code</h3>
+      <input id="newCode" placeholder="Nouveau code admin"><br>
+      <button class="btn" onclick="addAdminCode()">Créer</button>
+    </div>
+    <div class="card">
+      <h3>Codes existants</h3>
+      <div id="codeList" class="list"></div>
+    </div>
+  </div>
+
+  <div id="settings" class="page" style="display:none;">
+    <h1>Paramètres</h1>
+    <div class="card">
+      <p>Modifier les options du site :</p>
+      <button class="btn">Mettre à jour</button>
+    </div>
+  </div>
+</div>
 
 <script>
-  function showPage(page){
-    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-    document.getElementById(page).style.display = 'block';
-  }
+let users = [];
+let adminCodes = [];
+
+function showPage(page){
+  document.querySelectorAll('.page').forEach(p=>p.style.display='none');
+  document.getElementById(page).style.display='block';
+}
+
+function addUser(){
+  let name = document.getElementById('userName').value;
+  let pass = document.getElementById('userPass').value;
+  if(!name || !pass) return alert('Remplis les champs');
+  users.push({name, pass});
+  updateUsers();
+}
+
+function updateUsers(){
+  document.getElementById('countUsers').innerText = users.length;
+  let list = '';
+  users.forEach((u,i)=>{
+    list += `<div>👤 ${u.name} <button onclick="deleteUser(${i})">Supprimer</button></div>`;
+  });
+  document.getElementById('userList').innerHTML = list;
+}
+
+function deleteUser(i){ users.splice(i,1); updateUsers(); }
+
+function addAdminCode(){
+  let code = document.getElementById('newCode').value;
+  if(!code) return alert('Entre un code');
+  adminCodes.push(code);
+  updateCodes();
+}
+
+function updateCodes(){
+  document.getElementById('countCodes').innerText = adminCodes.length;
+  let list='';
+  adminCodes.forEach((c,i)=>{
+    list += `<div>🔑 ${c} <button onclick="deleteCode(${i})">Supprimer</button></div>`;
+  });
+  document.getElementById('codeList').innerHTML = list;
+}
+
+function deleteCode(i){ adminCodes.splice(i,1); updateCodes(); }
 </script>
 
 </body>
-  <div class="main-content">
-    <h2>Bienvenue sur le panneau d'administration !</h2>
-    <p>Sélectionnez une option dans le menu de gauche.</p>
-  </div>
 </html>
