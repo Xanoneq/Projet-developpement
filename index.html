@@ -1,119 +1,116 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Admin Panel</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nom de l’Association</title>
   <style>
-    body {margin:0;background:#0e0e0e;color:white;font-family:Arial;}
-    .sidebar {width:260px;height:100vh;background:#1a1a1a;position:fixed;left:0;top:0;padding:20px;box-shadow:2px 0 8px #0008;}
-    .sidebar h2 {margin-top:0;font-size:24px;display:flex;align-items:center;gap:10px;}
-    .btn {display:block;width:100%;padding:15px;margin:10px 0;background:#ff5f5f;border:none;border-radius:10px;color:white;font-size:16px;cursor:pointer;transition:0.2s;}
-    .btn:hover {background:#ff7b7b;}
-    .main {margin-left:260px;padding:30px;}
-    .card {background:#1d1d1d;padding:20px;border-radius:12px;margin-bottom:20px;box-shadow:0 0 10px #0006;}
-    input, select {padding:10px;border-radius:8px;border:none;margin:5px 0;width:250px;}
-    .list {background:#111;padding:15px;border-radius:10px;margin-top:10px;}
+    :root {
+      --primary: #2b4eff;
+      --primary-dark: #1a2fb8;
+      --bg: #f5f7fb;
+      --text: #2b2b2b;
+      --card-bg: #ffffff;
+      --radius: 14px;
+      --shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.8rem;
+      font-weight: 700;
+    }
+
+    nav {
+      background: var(--card-bg);
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      box-shadow: var(--shadow);
+      z-index: 100;
+    }
+
+    nav a {
+      color: var(--primary-dark);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.05rem;
+      transition: 0.3s;
+    }
+
+    nav a:hover {
+      color: var(--primary);
+    }
+
+    .section {
+      padding: 50px 30px;
+      max-width: 1000px;
+      margin: 40px auto;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.6s ease;
+    }
+
+    h2 {
+      font-size: 2rem;
+      color: var(--primary-dark);
+      margin-bottom: 15px;
+    }
+
+    footer {
+      margin-top: 60px;
+      background: var(--primary-dark);
+      color: white;
+      text-align: center;
+      padding: 25px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
+  <header>
+    <h1>Nom de l’Association</h1>
+    <p>Objectif / Mission en cours de définition</p>
+  </header>
 
-<div class="sidebar">
-  <h2>🔐 Admin</h2>
-  <button class="btn" onclick="showPage('dashboard')">📊 Dashboard</button>
-  <button class="btn" onclick="showPage('users')">👥 Utilisateurs</button>
-  <button class="btn" onclick="showPage('codes')">🔑 Codes Admin</button>
-  <button class="btn" onclick="showPage('settings')">⚙️ Paramètres</button>
-</div>
+  <nav>
+    <a href="accueil.html">Accueil</a>
+    <a href="apropos.html">À propos</a>
+    <a href="membres.html">Membres</a>
+    <a href="actualites.html">Actualités</a>
+    <a href="contact.html">Contact</a>
+  </nav>
 
-<div class="main">
-  <div id="dashboard" class="page">
-    <h1>Dashboard</h1>
-    <div class="card">Nombre d'utilisateurs : <span id="countUsers">0</span></div>
-    <div class="card">Codes admin actifs : <span id="countCodes">0</span></div>
-  </div>
+  <section class="section">
+    <h2>Accueil</h2>
+    <p>Bienvenue sur le site officiel de notre association. Les différentes rubriques sont maintenant disponibles sur des pages séparées.</p>
+  </section>
 
-  <div id="users" class="page" style="display:none;">
-    <h1>Gestion des utilisateurs</h1>
-    <div class="card">
-      <h3>Ajouter un utilisateur</h3>
-      <input id="userName" placeholder="Nom d'utilisateur"><br>
-      <input id="userPass" placeholder="Mot de passe"><br>
-      <button class="btn" onclick="addUser()">Ajouter</button>
-    </div>
-    <div class="card">
-      <h3>Liste des utilisateurs</h3>
-      <div id="userList" class="list"></div>
-    </div>
-  </div>
-
-  <div id="codes" class="page" style="display:none;">
-    <h1>Codes Administrateur</h1>
-    <div class="card">
-      <h3>Créer un code</h3>
-      <input id="newCode" placeholder="Nouveau code admin"><br>
-      <button class="btn" onclick="addAdminCode()">Créer</button>
-    </div>
-    <div class="card">
-      <h3>Codes existants</h3>
-      <div id="codeList" class="list"></div>
-    </div>
-  </div>
-
-  <div id="settings" class="page" style="display:none;">
-    <h1>Paramètres</h1>
-    <div class="card">
-      <p>Modifier les options du site :</p>
-      <button class="btn">Mettre à jour</button>
-    </div>
-  </div>
-</div>
-
-<script>
-let users = [];
-let adminCodes = [];
-
-function showPage(page){
-  document.querySelectorAll('.page').forEach(p=>p.style.display='none');
-  document.getElementById(page).style.display='block';
-}
-
-function addUser(){
-  let name = document.getElementById('userName').value;
-  let pass = document.getElementById('userPass').value;
-  if(!name || !pass) return alert('Remplis les champs');
-  users.push({name, pass});
-  updateUsers();
-}
-
-function updateUsers(){
-  document.getElementById('countUsers').innerText = users.length;
-  let list = '';
-  users.forEach((u,i)=>{
-    list += `<div>👤 ${u.name} <button onclick="deleteUser(${i})">Supprimer</button></div>`;
-  });
-  document.getElementById('userList').innerHTML = list;
-}
-
-function deleteUser(i){ users.splice(i,1); updateUsers(); }
-
-function addAdminCode(){
-  let code = document.getElementById('newCode').value;
-  if(!code) return alert('Entre un code');
-  adminCodes.push(code);
-  updateCodes();
-}
-
-function updateCodes(){
-  document.getElementById('countCodes').innerText = adminCodes.length;
-  let list='';
-  adminCodes.forEach((c,i)=>{
-    list += `<div>🔑 ${c} <button onclick="deleteCode(${i})">Supprimer</button></div>`;
-  });
-  document.getElementById('codeList').innerHTML = list;
-}
-
-function deleteCode(i){ adminCodes.splice(i,1); updateCodes(); }
-</script>
-
+  <footer>
+    <p>© 2025 Nom de l’Association — Tous droits réservés</p>
+  </footer>
 </body>
 </html>
